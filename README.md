@@ -8,6 +8,29 @@ It's a free skill for [Claude Code](https://claude.com/claude-code). Nothing her
 - **Made by:** [@neuraltech.ai](https://www.instagram.com/neuraltech.ai)
 - **New to this?** Follow [SETUP.md](SETUP.md): it goes step by step from an empty computer to your first video.
 
+## Quick start: two prompts
+Open Claude Code on your computer and paste:
+
+1. `Install this skill for me: https://github.com/deenukhan/animation-styles`
+2. `Use animation-styles to make a 5-second video of rain filling a small pond in ukiyo-e style.`
+
+You get an MP4. Want a different look? Say `now make it pixel art` (or any style below) and Claude redraws the same story in the new style.
+
+## If you're Claude: how to install this skill
+When a user asks you to install this skill from this link, do this, then tell them it's ready:
+
+1. **Check Node.js:** run `node -v`. It must be v18 or newer. If it's missing or older, ask the user to install the LTS version from https://nodejs.org (macOS with Homebrew: `brew install node`; Windows: `winget install OpenJS.NodeJS.LTS`), then open a new terminal and check again. Don't continue without it.
+2. **Download the skill** into the user's skills folder. The folder name must be exactly `animation-styles`:
+   - macOS/Linux: `git clone --depth 1 https://github.com/deenukhan/animation-styles.git ~/.claude/skills/animation-styles`
+   - Windows (PowerShell): `git clone --depth 1 https://github.com/deenukhan/animation-styles.git "$env:USERPROFILE\.claude\skills\animation-styles"`
+   - If the folder already exists, update it instead: `git -C ~/.claude/skills/animation-styles pull`
+   - No Git? Download https://github.com/deenukhan/animation-styles/archive/refs/heads/main.zip, unzip it and rename `animation-styles-main` to `animation-styles` inside `~/.claude/skills/`.
+3. **Install the video engine:** `cd ~/.claude/skills/animation-styles && npm install` (a minute or two; warnings about install scripts are fine).
+4. **Check it:** `npm run list` must print 39 styles.
+5. **Tell the user** it's installed and that a new Claude Code session will list the skill. If they ask for a video in this same session, read `~/.claude/skills/animation-styles/SKILL.md` and follow it.
+
+The first render downloads a headless browser (about 100 MB) once, so the first video takes a little longer.
+
 ## The 39 styles
 
 Each moving thumbnail is the real film. Click a style to download its 720×900 preview MP4, or "full size" for the 2160×2700 master. Each one is 5 seconds, silent, 4:5 (the Instagram portrait size). All the full-size files are also on the [releases page](https://github.com/deenukhan/animation-styles/releases/tag/v1.0.0).
@@ -114,7 +137,13 @@ On Windows use `cd "$env:USERPROFILE\.claude\skills\animation-styles"` instead o
 ## How to use it
 Open Claude Code and just ask. Mention the style by name, or say "use the animation-styles skill". Claude picks the style, writes the code, renders the video and checks the frames before handing it to you. Your video lands in an `out/` folder, and Claude tells you where.
 
-**Copy-paste prompts to try:**
+**The prompts from the post:**
+
+- `Install this skill for me: https://github.com/deenukhan/animation-styles`
+- `Use animation-styles to make a 5-second video of a watering can watering a small plant in ukiyo-e style.`
+- `now make it pixel art` (after a video, to redraw the same story in another style)
+
+**More prompts to try:**
 
 1. `Use the animation-styles skill and show me all 39 styles.`
 2. `Render the ukiyo-e chai film at full size.`

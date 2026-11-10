@@ -4,6 +4,27 @@ Thanks for commenting! This is the skill from the post: **39 animation styles th
 
 **Skill name:** `animation-styles` · **Download:** [github.com/deenukhan/animation-styles](https://github.com/deenukhan/animation-styles)
 
+## The fast way (let Claude install it)
+If you already have Claude Code and Node.js, open Claude Code and paste:
+
+> Install this skill for me: https://github.com/deenukhan/animation-styles
+
+Then start a new Claude Code session and ask:
+
+> Use animation-styles to make a 5-second video of [your idea] in ukiyo-e style.
+
+You get an MP4. Say "now make it pixel art" (or any other style) to redraw the same story in a new look. If anything goes wrong, follow the manual steps below.
+
+## If you're Claude: how to install this skill
+1. Run `node -v`. It must be v18 or newer. If not, ask the user to install the LTS version from https://nodejs.org (macOS with Homebrew: `brew install node`; Windows: `winget install OpenJS.NodeJS.LTS`), open a new terminal and check again.
+2. Clone into the skills folder, named exactly `animation-styles`:
+   - macOS/Linux: `git clone --depth 1 https://github.com/deenukhan/animation-styles.git ~/.claude/skills/animation-styles`
+   - Windows (PowerShell): `git clone --depth 1 https://github.com/deenukhan/animation-styles.git "$env:USERPROFILE\.claude\skills\animation-styles"`
+   - Already there? `git -C ~/.claude/skills/animation-styles pull`. No Git? Use https://github.com/deenukhan/animation-styles/archive/refs/heads/main.zip and rename the unzipped folder to `animation-styles`.
+3. `cd ~/.claude/skills/animation-styles && npm install` (warnings about install scripts are fine).
+4. `npm run list` must print 39 styles.
+5. Tell the user it's installed and a new session will list the skill. If they ask for a video in this same session, read `~/.claude/skills/animation-styles/SKILL.md` and follow it.
+
 ## What you need
 | Tool | Why | Cost |
 |---|---|---|
@@ -57,9 +78,13 @@ Open Claude Code in any folder and paste:
 
 Then make one with your own story:
 
-> Use the animation-styles skill. Make my story in ukiyo-e style: a watering can waters a small plant in a pot and it sprouts two leaves. Show me the plan first, then render a preview and check the frames.
+> Use animation-styles to make a 5-second video of a watering can watering a small plant in ukiyo-e style.
 
-Claude will map your story onto the six beats (comes in, gets ready, main action, result grows, leaves, aftermath), build it in its own project folder, render it and look at the frames before giving you the video. When you like it, say "render the final" for the full 2160×2700 version.
+When it's done, try another look for the same story:
+
+> now make it pixel art
+
+Claude maps your story onto the six beats (comes in, gets ready, main action, result grows, leaves, aftermath), builds it in an `animation-films` folder inside the folder you opened Claude Code in, checks the frames, and gives you a full-size 2160×2700 MP4. Each new style you ask for is added next to the earlier ones, so nothing gets overwritten.
 
 **More ideas:** a coffee pot filling a mug in chalkboard style · a coin dropping into a piggy bank in pixel art · honey pouring onto a pancake in stained glass · a phone charging in hologram HUD · rain filling a pond in watercolour.
 

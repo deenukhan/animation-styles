@@ -1,6 +1,6 @@
 ---
 name: animation-styles
-description: 39 animation styles drawn entirely in code with Remotion (SVG and canvas, no image or video model), from whiteboard, chalkboard, watercolour, ukiyo-e, stained glass, woodcut, papercut and shadow puppet to pixel art, claymation look, brick toy, low-poly, silent film, newsreel, hologram HUD and generative abstract. Each style tells the same 5-second story (a kettle pours chai into a clay cup, steam rises), and any of them can be retold with the user's own story or object. Use whenever the user asks to animate something in a named art or animation style ("animate this in a woodcut style", "make my story in ukiyo-e style", "a chalkboard explainer of X", "turn this into pixel art animation", "stained glass version"), wants to see, compare or pick animation styles, asks which styles are available, or wants a short silent looping animation for a reel, carousel or post drawn in code.
+description: Makes short silent animated videos (MP4) in 39 animation styles drawn entirely in code with Remotion, with no image or video model: whiteboard, chalkboard, notepad doodle, blueprint, pencil sketch, watercolour, crayon, one line, cel anime, flat vector, stick figure, cut-out collage, papercut, paper pop-up, shadow puppet, woodcut, engraving, silkscreen, ukiyo-e, art deco, stained glass, Memphis, sticker explainer, math diagram, low-poly, brick toy, glass product, claymation, lidar, silent film, newsreel, pixel art, microscope, hologram HUD, circuit board, liquid motion and generative abstract. Use whenever the user says "use animation-styles", asks to "make a 5-second video of <idea> in <style> style", "animate this in a <style> style" or "make my story in ukiyo-e style", or asks to restyle a video made with it ("now make it pixel art", "try it in watercolour", "same thing in another style"). Also use to show, compare or pick animation styles, or to install or update this skill.
 ---
 
 # Animation styles
@@ -15,6 +15,18 @@ The project lives in this skill's folder (the folder holding this file, called `
 1. `cd <skill>` and check `node_modules/` exists. If not, run `npm install` (about a minute, needs Node 18+).
 2. `npm run list` prints all 39 styles with their number, slug and a one-line look.
 3. The first render downloads a headless Chrome once (about 100 MB). It needs internet.
+
+## The usual request: "make a 5-second video of <idea> in <style> style"
+This is the main job (and the prompt on the post that sends people here). Do it end to end without stopping for questions unless the idea is unclear:
+1. **Work folder:** use `animation-films/` inside the user's current working folder. If it doesn't exist, create it from that folder with `node <skill>/scripts/new-project.mjs animation-films`, then `cd animation-films && npm install` (fast after the first time). If it exists (a follow-up), reuse it as it is.
+2. **Pick the style** from the request (section 1). No style named? Suggest three that suit the idea and ask.
+3. **Plan the story** on the six beats (section 3) in a short table. Show it in one message and carry on; don't wait unless something is ambiguous.
+4. **Shapes first:** put the user's objects (the actor, the container, what flows, what rises) in `src/films/<idea>-shapes.ts` as SVG paths in the same coordinates as `P` in `story.ts`, with the beat table as a comment at the top. Every style version of this idea imports from this one file.
+5. **Build** `src/films/<idea>-<style>.tsx` from the style's component (section 3), using the shapes file, and register it in `src/films/index.ts` with id `<idea>-<style>`.
+6. **Check:** `npm run render -- <idea>-<style> --frames` and look at all six frames (section 5). Fix and repeat.
+7. **Deliver:** `npm run render -- <idea>-<style> --final` and give the user the full path of `out/<idea>-<style>.mp4`. Mention that they can ask for another style ("now make it pixel art").
+
+**Restyle follow-up ("now make it pixel art", "try watercolour", "same in woodcut"):** stay in the same `animation-films/` folder, keep the same idea, beat table and shapes file, and build a new `src/films/<idea>-<new-style>.tsx` from the new style's component. Register it alongside the earlier version (never overwrite it), check the frames, render the final and give the new path. If the user names a style loosely ("8-bit", "old movie", "chalk"), map it with section 1. The 3D-look styles (57, 58, 59, 62, 80) build objects as 3D meshes, so swapping in new objects takes more work there: turn the shapes into simple lathe or box meshes with the helpers in `src/styles/3d/mesh.ts`.
 
 ## 1. Pick a style
 Ask the user which style they want if they haven't said. If they're unsure, show `npm run list` grouped by family and the gallery in `README.md` (each style has a moving preview in `media/thumbs/` and a 720×900 MP4 in `media/videos/`). Match loosely: "Japanese print" → 33 Ukiyo-e, "chalk" → 02 Chalkboard, "8-bit" or "retro game" → 64 Pixel art RPG, "clay" → 62 Claymation, "Lego-like" → 58 Brick toy (never call it Lego on screen), "old movie" → 70 Silent film or 71 Newsreel, "sci-fi screen" → 84 Hologram HUD.
@@ -68,7 +80,7 @@ The story is fixed in `src/story.ts`. Keep its timing and change what is drawn. 
 | Data upload (abstract or info styles) | a cloud | packets travel along `stream` | a bar or gauge fills with `level` | a tick mark rises |
 
 **Then build it:**
-1. For anything bigger than a quick test, make a separate project so the installed skill stays clean: `npm run new -- <folder>`, then `cd <folder> && npm install`. (For a throwaway test you can work in `<skill>` itself.)
+1. Work in a separate project so the installed skill stays clean: by default `animation-films/` in the user's current folder (see "The usual request" above), created with `node <skill>/scripts/new-project.mjs <folder>` and then `npm install` inside it. Never build the user's films inside `<skill>` itself.
 2. Copy the chosen style's component from its file (see `src/catalog.ts`) into `src/films/<film-name>.tsx`, together with the helpers it imports. Never edit the 39 originals in place: they are the reference.
 3. Replace the shapes, not the timing: swap the kettle and cup paths for the user's objects (keep them about the same size and position: cup centred at x 540, rim at y ≈ 800; actor at rest around (796, 324) with its "spout" at the local point (−251, −62)), recolour the liquid, change what rises. Keep the style's own materials, palette logic, filters, texture and motion character (stepped on twos or threes for hand-made media, smooth for digital, flicker for film).
 4. If the style shows words (listed in the catalog's `text` field: 51, 52, 64, 70, 71, 84 and 85 show words), rewrite them for the new story: short, plain English, only about the story.
